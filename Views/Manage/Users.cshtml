@@ -1,0 +1,45 @@
+﻿@model IEnumerable<URLShortener.Models.ViewModels.Manage.UserViewModel>
+
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailConfirmed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedUrlsCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailConfirmed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedUrlsCount)
+            </td>
+            <td>
+                <a asp-action="UserEdit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="UserDelete" asp-route-id="@item.Id">Delete</a> |
+                <a asp-action="UserUrls" asp-route-id="@item.Id">User URLs</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

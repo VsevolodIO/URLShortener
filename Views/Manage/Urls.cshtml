@@ -1,0 +1,91 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using URLShortener.Areas.Identity.Data
+@model URLShortener.Models.ViewModels.UrlsIndexViewModel<URLShortener.Models.ViewModels.Manage.UrlViewModel>
+@inject UserManager<User> UserManager
+@{
+    ViewData["Title"] = "Urls";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Urls</h1>
+
+<form method="get">
+    <div class="form-inline">
+        <label>URL: </label>
+        <input name="s" value="@(Model.UrlsFilterViewModel.SelectedName)" class="form-control" />
+
+        <input type="submit" value="Search" class="btn btn-outline-dark" />
+    </div>
+</form>
+<br/>
+<h6>Count of all URLs: @Model.UrlModels.Count()</h6>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().IpAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().User.UserName)
+            </th>
+            <th>
+                <a asp-action="Urls" asp-route-sort="@(Model.UrlSortViewModel.FullUrlSort)" asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)">
+                    @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().FullUrl)
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().ShortUrl)
+            </th>
+            <th>
+                <a asp-action="Urls" asp-route-sort="@(Model.UrlSortViewModel.DateCreatedSort)" asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)">
+                    @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().DateCreated)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Urls" asp-route-sort="@(Model.UrlSortViewModel.RedirectCountSort)" asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)">
+                    @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().RedirectCount)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.UrlModels)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IpAddress)
+                </td>
+                <td>
+                    @if (item.User.UserName == "ANON")
+                    {
+                        @Html.DisplayFor(modelItem => item.User.UserName)
+                    }
+                    else
+                    {
+                    <a asp-action="UserEdit" asp-route-id="@(UserManager.Users.FirstOrDefault(u=>u.Id == item.User.UserName).Id)">
+                        @Html.DisplayFor(modelItem => UserManager.Users.FirstOrDefault(u => u.Id == item.User.UserName).UserName)
+                    </a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShortUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RedirectCount)
+                </td>
+                <td>
+                    <a asp-action="UrlEdit" asp-route-shorturl="@item.ShortUrl">Edit</a> |
+                    <a asp-action="UrlDelete" asp-route-shorturl="@item.ShortUrl">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

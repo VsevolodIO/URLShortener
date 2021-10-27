@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "success";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string path = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}/";
+
+}
+
+
+<div class="row justify-content-center" >
+    
+    <h3>Fantastic! Short URL was created</h3>
+    
+    
+</div>
+<div class="row justify-content-center" >
+    <a style="font-size: 50px;" asp-controller="ShortUrlRedirect" asp-action="Index" asp-route-shorturl="@ViewBag.ShortUrl" asp>@(path + ViewBag.ShortUrl)</a>
+</div>

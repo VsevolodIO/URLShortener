@@ -1,0 +1,90 @@
+﻿@model URLShortener.Models.ViewModels.UrlsIndexViewModel<UserUrl>
+
+@{
+    ViewData["Title"] = "URL List";
+}
+
+<h1>List of URLs</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form method="get">
+    <div class="form-inline">
+        <label>URL: </label>
+        <input name="s" value="@(Model.UrlsFilterViewModel.SelectedName)" class="form-control" />
+
+        <input type="submit" value="Search" class="btn btn-outline-dark" />
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sort="@(Model.UrlSortViewModel.FullUrlSort)" asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)">
+                    @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().FullUrl)
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().ShortUrl)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sort="@(Model.UrlSortViewModel.DateCreatedSort)" asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)">
+                    @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().DateCreated)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sort="@(Model.UrlSortViewModel.RedirectCountSort)" asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)">
+                    @Html.DisplayNameFor(model => model.UrlModels.FirstOrDefault().RedirectCount)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.UrlModels)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullUrl)
+                </td>
+                <td>
+                    @*<a href="@item.ShortUrl">@Html.DisplayFor(modelItem => item.ShortUrl)</a>*@
+                    <a asp-controller="ShortUrlRedirect" asp-action="Index" asp-route-shorturl="@item.ShortUrl" asp>@item.ShortUrl</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RedirectCount)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.UrlPageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-p="@(Model.UrlPageViewModel.PageNumber - 1)"
+       asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)"
+       asp-route-sort="@(Model.UrlSortViewModel.CurrentSortState)"
+       class="btn  btn-outline-dark">
+        Previous
+    </a>
+}
+@if (Model.UrlPageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-p="@(Model.UrlPageViewModel.PageNumber + 1)"
+       asp-route-s="@(Model.UrlsFilterViewModel.SelectedName)"
+       asp-route-sort="@(Model.UrlSortViewModel.CurrentSortState)"
+       class="btn btn-outline-dark">
+        Next
+    </a>
+}
